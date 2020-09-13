@@ -31,8 +31,8 @@ func main() {
 		MaxPolls:           1000000000,
 	}
 	serialOptions := serial.OpenOptions{
-		PortName:        "/dev/tty.Bluetooth-Incoming-Port",
-		BaudRate:        9600,
+		PortName:        "/dev/cu.usbmodem143101",
+		BaudRate:        115200,
 		DataBits:        8,
 		StopBits:        1,
 		MinimumReadSize: 4,

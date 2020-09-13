@@ -3,16 +3,15 @@ package serialadapter
 import (
 	"io"
 	"log"
-	"strconv"
+	"strings"
 
 	"github.com/jacobsa/go-serial/serial"
 )
 
 // Command struct
 type Command struct {
-	Motor    string `json:"motorNumber"`
-	Degrees  string `json:"rotationDegrees"`
-	Rotation string `json:"direction"`
+	Motor   string `json:"motorName"`
+	Degrees string `json:"rotationDegrees"`
 }
 
 // SerialClient injector
@@ -41,17 +40,8 @@ func New(client SerialClient, serialOptions serial.OpenOptions) *SerialAdapter {
 func (s *SerialAdapter) SendCommand(command *Command) {
 	// Our serial command should look like
 	// motorNumber(int) Degrees(int) Rotation(-1 or +1)
-	motorNumber, _ := strconv.Atoi(command.Motor)
-	degrees, _ := strconv.Atoi(command.Degrees)
-	m := make(map[string]int)
-	m["clockwise"] = 1
-	m["anticlockwise"] = -1
-	rotation := m[command.Rotation]
-	var byteArray []byte
-	byteArray = append(byteArray, byte(motorNumber))
-	byteArray = append(byteArray, byte(degrees))
-	byteArray = append(byteArray, byte(rotation))
-	s.Port.Write(byteArray)
-	log.Printf("serialadapter wrote message to serial port:")
-	log.Print(byteArray)
+	commandAsStringArray := []string{command.Motor, command.Degrees}
+	commandAsString := strings.Join(commandAsStringArray[:], ",")
+	s.Port.Write([]byte(commandAsString))
+	log.Printf("serialadapter wrote message to serial port: %s", commandAsString)
 }
