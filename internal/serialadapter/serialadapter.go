@@ -10,8 +10,10 @@ import (
 
 // Command struct
 type Command struct {
-	Motor   string `json:"motorName"`
-	Degrees string `json:"rotationDegrees"`
+	CommandType string `json:"commandType"`
+	Motor       string `json:"motorName"`
+	Degrees     string `json:"rotationDegrees"`
+	Speed       string `json:"speed"`
 }
 
 // SerialClient injector
@@ -38,9 +40,7 @@ func New(client SerialClient, serialOptions serial.OpenOptions) *SerialAdapter {
 
 // SendCommand sends a command to the serial port
 func (s *SerialAdapter) SendCommand(command *Command) {
-	// Our serial command should look like
-	// motorNumber(int) Degrees(int) Rotation(-1 or +1)
-	commandAsStringArray := []string{command.Motor, command.Degrees}
+	commandAsStringArray := []string{command.CommandType, command.Motor, command.Degrees, command.Speed}
 	commandAsString := strings.Join(commandAsStringArray[:], ",")
 	s.Port.Write([]byte(commandAsString))
 	log.Printf("serialadapter wrote message to serial port: %s", commandAsString)

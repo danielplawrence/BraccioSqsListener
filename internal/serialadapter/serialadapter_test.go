@@ -58,10 +58,12 @@ func TestSend(t *testing.T) {
 		MinimumReadSize: 4,
 	}
 	command := Command{
-		Motor:   "1",
-		Degrees: "100",
+		CommandType: "M",
+		Motor:       "1",
+		Degrees:     "100",
+		Speed:       "100",
 	}
-	expectedBytes := []byte("1,100")
+	expectedBytes := []byte("M,1,100,100")
 	port := new(MockReadWriteCloser)
 	client := MockSerialClient{
 		MockedPort: port,
